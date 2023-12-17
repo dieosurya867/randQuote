@@ -9,4 +9,5 @@ A brief description of what this project does and who it's for.
 Clone the repository:
 
 ### Usage
+```sh
 php -S localhost:8000
