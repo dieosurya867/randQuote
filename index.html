@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Random Quote Generator</title>
+    <style>
+        #quote-container {
+            height: 300px;
+            /* atur tinggi maksimal */
+            overflow-y: auto;
+            /* tambahkan scrollbar jika perlu */
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+
+        .quote-item {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body> <!-- Contains the content that is rendered on the browser -->
+    <div id="quote-container"> <!-- Div element to contain the quotes -->
+        <p id="quote">Klik tombol di bawah untuk melihat kutipan.</p>
+        <!-- Initial text displayed in the quote container -->
+    </div>
+    <button id="generate-quote">Tampilkan Kutipan</button> <!-- Button to generate a new quote -->
+
+    <script>
+        // Script to fetch and display quotes
+        window.onload = function() { // Function that runs when the window is loaded
+            fetch('quotes.php?reset=true') // Fetch request to reset the quotes
+                .catch(error => console.error('Error:', error)); // Logs any errors to the console
+        };
+
+        document.getElementById('generate-quote').addEventListener('click',
+        function() { // Adds an event listener to the generate quote button
+            // Call the function to request a new quote
+            fetchNewQuote(); // Calls the fetchNewQuote function when the button is clicked
+        });
+
+        function fetchNewQuote() { // Function to fetch a new quote
+            fetch('quotes.php') // Fetch request to get a new quote
+                .then(response => response.json()) // Parses the response as JSON
+                .then(data => displayQuote(data)) // Calls the displayQuote function with the parsed data
+                .catch(error => console.error('Error:', error)); // Logs any errors to the console
+        }
+
+        function displayQuote(data) { // Function to display a quote
+            const quoteContainer = document.getElementById('quote-container'); // Gets the quote container element
+
+            if (data.error) { // Checks if there's an error in the data
+                // If there's an error
+                quoteContainer.insertAdjacentHTML('beforeend',
+                `<p class="quote-item">${data.error}</p>`); // Inserts the error message at the end of the quote container
+            } else {
+                // If a new quote is received
+                const quoteItem = `<p class="quote-item">${data.quote}</p>`; // Creates a new quote item
+                quoteContainer.insertAdjacentHTML('afterbegin',
+                quoteItem); // Inserts the new quote item at the beginning of the quote container
+            }
+        }
+    </script>
+</body>
+
+</html>
